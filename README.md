@@ -28,3 +28,9 @@ jq
 ```
     issues.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}] [-o {PROJECT_EXTERNAL_ID}] [-v {VERSION_EXTERNAL_ID}] [-d {NUMBER_OF_DAYS}] [-c {TYPE_OF_ISSUE}] [-s {STATUS}]
 ```
+
+### List issue sections
+
+```
+    issue.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}] [-o {PROJECT_EXTERNAL_ID}] [-i {ISSUE_EXTERNAL_ID}] [-d {NUMBER_OF_DAYS}]
+```

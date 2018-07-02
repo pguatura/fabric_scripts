@@ -37,8 +37,6 @@ if [[ "$projectId" == "" ]];then
     projectId=$(echo $projects | jq --argjson num "$projectNumber" -r '. | sort_by(.name)[$num].externalId')
 fi
 
-echo $projectId
-
 if [ "$projectId" == "" -o "$projectId" == "null" ];then
     echo "INVALID PROJECT ID - check usage"
     exit 1

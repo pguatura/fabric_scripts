@@ -36,7 +36,7 @@ if [ "$projectId" == "" -o "$projectId" == "null" ];then
     exit 1
 fi
 
-versions=$(curl 'https://api-dash.fabric.io/graphql?relayDebugName=Project_route' -H "Authorization: Bearer $token" -H 'Content-Type: application/json' --data-binary "{\"query\":\"query Project_route(\$externalId_0:String!) {project(externalId:\$externalId_0) {id,...F2}} fragment F0 on ProjectVersion {externalId} fragment F1 on Project {externalId} fragment F2 on Project {_versions4zJYbv:versions(first:2000,omitVersionsWithNoEvents:false,days:90) {edges {node {externalId,sortOrder,name,...F0}}},...F1}\",\"variables\":{\"externalId_0\":\"$projectId\"}}" --compressed)
+versions=$(curl -s 'https://api-dash.fabric.io/graphql?relayDebugName=Project_route' -H "Authorization: Bearer $token" -H 'Content-Type: application/json' --data-binary "{\"query\":\"query Project_route(\$externalId_0:String!) {project(externalId:\$externalId_0) {id,...F2}} fragment F0 on ProjectVersion {externalId} fragment F1 on Project {externalId} fragment F2 on Project {_versions4zJYbv:versions(first:2000,omitVersionsWithNoEvents:false,days:90) {edges {node {externalId,sortOrder,name,...F0}}},...F1}\",\"variables\":{\"externalId_0\":\"$projectId\"}}" --compressed)
 
 
 if [[ "$versions" == "" ]];then

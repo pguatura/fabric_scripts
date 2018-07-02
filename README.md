@@ -1,11 +1,11 @@
-#REQUIREMENTS
+# REQUIREMENTS
 
 jq
 
 
-#USAGE
+# USAGE
 
-##Login
+## Login
 
 ```
     login.sh {USER} {PASSWORD}

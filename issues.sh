@@ -17,8 +17,6 @@ do
     esac
 done
 
-echo $type
-
 if [[ "$token" == "" ]];then
     token=$($dir/login.sh $user $pass)
 fi
@@ -74,7 +72,7 @@ startDate=$(date -u -d "00:00:00 $numDays days ago" +%s)
 endDate=$(date -u -d "23:59:59" +%s)
 externalId=$projectId
 
-query=$(echo '{"query":"query TopIssues($externalId_0:String!,$type_1:IssueType!,$start_2:UnixTimestamp!,$end_3:UnixTimestamp!,$filters_4:IssueFiltersType!,$state_5:IssueState!) {project(externalId:$externalId_0) {crashlytics {_issues1ctixL:issues(synthesizedBuildVersions:{versions},eventType:$type_1,start:$start_2,end:$end_3,state:$state_5,first:15,filters:$filters_4) {edges {node {externalId,resolvedAt,title,subtitle,state,type,occurrenceCount,earliestBuildVersion {buildVersion {name}},latestBuildVersion {buildVersion {name}}}}}}}}","variables":{"externalId_0":"{externalId}","type_1":"{type}","start_2":{start},"end_3":{end},"filters_4":{},"state_5":"{status}"}}' | sed "s/{status}/$status/g" | sed "s/{end}/$endDate/g" | sed "s/{start}/$startDate/g" | sed "s/{versions}/$versionName/g" | sed "s/{externalId}/$externalId/g" | sed "s/{type}/$type/g")
+query=$(echo '{"query":"query TopIssues($externalId_0:String!,$type_1:IssueType!,$start_2:UnixTimestamp!,$end_3:UnixTimestamp!,$filters_4:IssueFiltersType!,$state_5:IssueState!) {project(externalId:$externalId_0) {crashlytics {_issues1ctixL:issues(synthesizedBuildVersions:{versions},eventType:$type_1,start:$start_2,end:$end_3,state:$state_5,first:15,filters:$filters_4) {edges {node {externalId,createdAt,resolvedAt,title,subtitle,state,type,occurrenceCount,earliestBuildVersion {buildVersion {name}},latestBuildVersion {buildVersion {name}}}}}}}}","variables":{"externalId_0":"{externalId}","type_1":"{type}","start_2":{start},"end_3":{end},"filters_4":{},"state_5":"{status}"}}' | sed "s/{status}/$status/g" | sed "s/{end}/$endDate/g" | sed "s/{start}/$startDate/g" | sed "s/{versions}/$versionName/g" | sed "s/{externalId}/$externalId/g" | sed "s/{type}/$type/g")
 
 
 data=$(curl -s 'https://api-dash.fabric.io/graphql?relayDebugName=TopIssues' \

@@ -16,3 +16,15 @@ jq
 ```
     projects.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}]
 ```
+
+### List project versions
+
+```
+    versions.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}] [-o {PROJECT_EXTERNAL_ID}]
+```
+
+### List project issues
+
+```
+    issues.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}] [-o {PROJECT_EXTERNAL_ID}] [-v {VERSION_EXTERNAL_ID}] [-d {NUMBER_OF_DAYS}] [-c {TYPE_OF_ISSUE}] [-s {STATUS}]
+```

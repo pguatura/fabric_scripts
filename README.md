@@ -32,5 +32,10 @@ jq
 ### List issue sections
 
 ```
-    issue.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}] [-o {PROJECT_EXTERNAL_ID}] [-i {ISSUE_EXTERNAL_ID}] [-d {NUMBER_OF_DAYS}]
+    issue.sh [-u {USER} -p {PASSWORD}] [-t {TOKEN}] [-o {PROJECT_EXTERNAL_ID}] [-i {ISSUE_EXTERNAL_ID}] [-d {NUMBER_OF_DAYS}] [-C {SHOULD_CONSOLIDATE_RESULTS}
+```
+### Consolidate issue sections
+
+```
+    consolidate.sh -f {PATH_TO_SESSIONS_JSON}
 ```

@@ -56,6 +56,8 @@ versions=$($dir/versions.sh -t $token -o $projectId)
 startDate=$(($(date -u -d "00:00:00 $numDays days ago" +%s)*1000))
 endDate=$(($(date -u -d "23:59:59" +%s)*1000))
 
+fEndDate=$(date -d @$(($endDate/1000)) +"%Y%m%d")
+formattedDates="_$fEndDate"
 
 started=false
 
@@ -80,7 +82,9 @@ while [[ $result != ""  || "$started" == "false" ]]; do
         stacktraces \
         {exceptions {caption {title,subtitle}}}}}}}\", \
         \"variables\":{$variables}}" --compressed)
+    
     result=$(echo "$result" | jq '.data.project.crashlytics[]  | select(has("externalId"))')
+    result=$(echo $result | jq '. | .stacktraces = ([.stacktraces.exceptions[] | .caption])')
     createdAt=$(echo "$result" | jq '.createdAt')
     if [[ "$createdAt" == "" ]];then
         break
@@ -88,11 +92,28 @@ while [[ $result != ""  || "$started" == "false" ]]; do
     if [[ $startDate -gt $createdAt ]];then
         break
     fi
+
+    if [[ "$jsonFile" == "" ]];then
+        exceptionName=$(echo $result | jq -r '.stacktraces[0].title')
+        exceptionName=$(echo $exceptionName | awk '{print $NF;}' )
+        exceptionName=${exceptionName//\./\ }
+        exceptionName=$(echo $exceptionName | awk '{print $NF;}' )
+        mkdir -p $dir/gen
+        jsonFile="$dir/gen/$exceptionName$formattedDates.json" 
+        echo "" > $jsonFile
+        echo "generated report: $jsonFile"
+    fi
     formatteddDate=$(($createdAt/1000))
     formatteddDate=$(date -d @$formatteddDate +"%Y-%m-%d %H:%M:%S")
     buildVersion=$(echo "$result" | jq -r '.buildVersionId')
     versionName=$(echo $versions | jq --arg id $buildVersion -r '.[] | select(.externalId == $id) | .name' )
-    echo $result | jq --argjson tForm "{\"createdAtString\":\"$formatteddDate\",\"buildVersionName\":\"$versionName\"""}" '. | .stacktraces = ([.stacktraces.exceptions[] | .caption]) | . += . + $tForm' \
-    | jq
-    
+    if [[ "$consolidate" == "false" ]];then
+        echo $result | jq --argjson tForm "{\"createdAtString\":\"$formatteddDate\",\"buildVersionName\":\"$versionName\"""}" '. += . + $tForm' 
+    fi
+    echo $result | jq -c --argjson tForm "{\"createdAtString\":\"$formatteddDate\",\"buildVersionName\":\"$versionName\"""}" '. += . + $tForm' >> $jsonFile
+    echo -e "\n" >> $jsonFile
  done
+
+ if [[ "$consolidate" != "false" ]];then
+   $dir/consolidate.sh -f $jsonFile
+ fi

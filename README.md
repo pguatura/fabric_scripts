@@ -1,3 +1,7 @@
+## DESCRIPTION
+
+This repository has a suite of scripts to help extracting informations from crashes and erros from projects registered on Fabric in a JSON format
+
 ## REQUIREMENTS
 
 jq

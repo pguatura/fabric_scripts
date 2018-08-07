@@ -42,7 +42,10 @@ if [ "$projectId" == "" -o "$projectId" == "null" ];then
     echo "INVALID PROJECT ID - check usage"
     exit 1
 fi
-org="577ec13d2edc7f37450000ff"
+
+project=$($dir/project_info.sh -t $token -o $projectId | jq '.')
+
+org=$(echo $project | jq -r '.orgId')
 
 releases=$(curl -s "https://fabric.io/api/v2/organizations/$org/apps/$projectId/beta_distribution/releases?do_not_create=true" \
 -H "Cookie: _fabric_session=$session;" \
